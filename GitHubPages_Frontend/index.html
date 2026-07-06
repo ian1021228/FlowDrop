@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlyDrop</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#F9F6F0">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <img src="/assets/logo.png" alt="FlyDrop Logo" class="logo" />
+        <div class="header-controls">
+          <div class="user-profile hidden" id="userProfile">
+            <img src="" alt="大頭貼" id="userAvatar" class="avatar" />
+            <div class="user-info">
+              <span id="userName">使用者</span>
+              <button id="setDeviceBtn" class="btn-text">裝置: <span id="currentDeviceNameDisplay">未命名</span> (點擊修改)</button>
+            </div>
+            <button id="logoutBtn" class="btn-icon" title="登出">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+          </div>
+          <div id="guestProfile" class="user-profile">
+            <div class="user-info">
+              <span style="font-weight: 600; font-size: 0.9rem;">訪客模式</span>
+              <button id="setDeviceBtnGuest" class="btn-text">裝置: <span id="currentDeviceNameDisplayGuest">未命名</span> (點擊修改)</button>
+            </div>
+          </div>
+          <button id="loginBtn" class="btn-secondary">Google 登入</button>
+          
+          <div class="room-info">
+            <span id="roomCodeDisplay">房間: ----</span>
+            <button id="copyRoomBtn" class="btn-icon" title="複製房號">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button id="showQrBtn" class="btn-icon" title="顯示 QR Code">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </button>
+          </div>
+        </div>
+      </header>
+      
+      <main>
+        <div class="connection-panel" id="connectionPanel">
+          <input type="text" id="joinRoomInput" placeholder="輸入6碼房號" class="input-field" style="max-width: 200px;"/>
+          <button id="joinRoomBtn" class="btn-primary">加入</button>
+          <button id="createRoomBtn" class="btn-secondary">建立隨機房間</button>
+        </div>
+
+        <div id="workspace" class="workspace hidden">
+          <div class="peers-container">
+            <h3>同房間的裝置</h3>
+            <div id="peersList">
+              <!-- Peer cards will be dynamically added here -->
+            </div>
+          </div>
+
+          <div class="transfers-container">
+            <h3>傳輸進度</h3>
+            <div id="transfers"></div>
+          </div>
+        </div>
+      </main>
+
+      <input type="file" id="fileInput" accept="*/*" multiple style="display: none;" />
+
+      <div id="qrModal" class="modal hidden">
+        <div class="modal-content">
+          <button id="closeQrBtn" class="close-btn">&times;</button>
+          <h3>掃描加入房間</h3>
+          <canvas id="qrCanvas"></canvas>
+          <p id="qrUrlText" style="font-size: 0.9rem; margin-top: 10px; color: var(--text-secondary);"></p>
+        </div>
+      </div>
+
+      <div id="deviceNameModal" class="modal hidden">
+        <div class="modal-content">
+          <button id="closeDeviceNameBtn" class="close-btn" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+          <h3>設定裝置名稱</h3>
+          <p class="modal-desc">設定名稱可以讓其他裝置更容易辨識您。</p>
+          <input type="text" id="deviceNameInput" placeholder="例如: 我的 iPhone" class="input-field" maxlength="20" style="margin-bottom: 20px;"/>
+          <button id="saveDeviceNameBtn" class="btn-primary" style="width: 100%;">儲存</button>
+        </div>
+      </div>
+    </div>
+    
+    <script type="module" src="/main.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
+  </body>
+</html>
